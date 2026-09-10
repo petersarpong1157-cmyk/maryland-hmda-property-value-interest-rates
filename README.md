@@ -155,9 +155,6 @@ The script produces the following principal result files:
 - `Paper1_Final_Linked_Base_HC3_Coefficients.csv`
 - `Paper1_Final_Linked_Property_HC3_Coefficients.csv`
 - `HMDA_SDAT_Final_Same_Sample_Nested_Models.csv`
-- `HMDA_SDAT_Exact_Bidirectional_4789.csv`
-- `HMDA_SDAT_Exact_4789_Selection_Diagnostic.csv`
-- `HMDA_SDAT_Exact_Linkage_Structural_Comparison.csv`
 
 ## License
 
