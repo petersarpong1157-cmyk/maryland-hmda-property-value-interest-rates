@@ -7,7 +7,7 @@ This repository contains the R code supporting the research paper:
 **Mortgage Interest Rates and Residential Property Values: Evidence from Linked Maryland HMDA and SDAT Data**
 
 **Author:** Peter Sarpong  
-**Affiliation:** Independent Researcher, Washington, DC, USA
+**Affiliation:** Independent Researcher, Gaithersburg, Maryland, USA
 
 The study examines the cross-sectional association between mortgage interest rates and residential property values using 2025 Maryland Home Mortgage Disclosure Act (HMDA) data.
 
