@@ -1,125 +1,137 @@
-# Mortgage Interest Rates and Residential Property Values: Evidence from Linked Maryland HMDA and SDAT Data
+# Property, Mortgage, Lender, and Location Heterogeneity in the Mortgage Rate–Property Value Relationship
+
+## Evidence from Linked HMDA and Assessment Data
+
+**Author:** Peter Sarpong  
+**Year:** 2026
 
 ## Overview
 
-This repository contains the R code supporting the research paper:
+This repository contains the analysis code and supporting outputs for the study:
 
-**Mortgage Interest Rates and Residential Property Values: Evidence from Linked Maryland HMDA and SDAT Data**
+**“Property, Mortgage, Lender, and Location Heterogeneity in the Mortgage Rate–Property Value Relationship: Evidence from Linked HMDA and Assessment Data.”**
 
-**Author:** Peter Sarpong  
-**Affiliation:** Independent Researcher, Gaithersburg, Maryland, USA
+The study uses 2025 Maryland Home Mortgage Disclosure Act (HMDA) data linked to Maryland State Department of Assessments and Taxation (SDAT) property transaction records.
 
-The study examines the cross-sectional association between mortgage interest rates and residential property values using 2025 Maryland Home Mortgage Disclosure Act (HMDA) data.
+The analysis examines how the estimated relationship between mortgage interest rates and residential property values changes as increasingly detailed information about property characteristics, mortgage products, lenders, and location is incorporated into the regression specification.
 
-A linked-sample robustness analysis incorporates property characteristics from Maryland State Department of Assessments and Taxation (SDAT) residential transaction data.
-
-The analysis is observational and cross-sectional. Estimated coefficients are interpreted as conditional associations rather than causal effects.
+The analysis is designed as a specification-sensitivity exercise. The estimated coefficients are interpreted as conditional associations and not as causal effects of mortgage interest rates on property values.
 
 ## Data
 
-### HMDA
+The analysis uses two primary data sources:
 
-The analysis uses the 2025 Maryland HMDA loan-level dataset made publicly available through the Federal Financial Institutions Examination Council (FFIEC) and Consumer Financial Protection Bureau (CFPB).
+1. **2025 Maryland HMDA data**
+2. **2025 Maryland SDAT residential property transaction data**
 
-The raw Maryland HMDA file contains **120,115 observations**.
+The HMDA data contain information on mortgage applications, originations, borrower characteristics, loan characteristics, lenders, and Census tracts.
 
-After restricting the data to originated loans with a valid numeric reported property value, the HMDA matching population contains **62,305 observations**.
+The SDAT data provide independently measured property information, including transaction prices and physical property characteristics.
 
-The complete-case sample used in the primary regression contains **58,587 observations**.
+Raw HMDA and SDAT data are not redistributed in this repository.
 
-### Maryland SDAT
+## Record Linkage
 
-The property-control analysis uses a processed Maryland SDAT residential transaction file with Census tract assignments.
+HMDA mortgage records are linked to SDAT property transactions using Census tract and property-value information.
 
-The processed SDAT matching file contains **63,304 residential transaction records** across **1,439 Census tracts**.
+The linkage procedure identifies high-confidence statistical links by requiring compatibility between the HMDA-reported property-value interval and the SDAT transaction price and applying bidirectional uniqueness restrictions.
 
-The current analysis script begins with the processed, tract-assigned SDAT file rather than the original raw SDAT source files.
+The matching population contains **62,305 HMDA originations**.
 
-The source HMDA and SDAT datasets are not redistributed in this repository.
+Among **62,112 tract-eligible observations**:
 
-## HMDA-SDAT Linkage
+- **54,874 (88.1%)** had at least one compatible SDAT candidate.
+- **18,568 (29.8%)** had exactly one compatible candidate.
+- **36,306 (58.3%)** had multiple compatible candidates.
 
-HMDA and SDAT records are linked using Census tract and property value/sale price information.
+The final linkage procedure identifies **4,789 high-confidence statistical links**, representing **7.69%** of the HMDA matching population.
 
-The analysis first identifies records with an exact match on:
+After applying complete-case requirements for the regression variables, the main linked analysis sample contains **4,167 observations**.
 
-- Census tract
-- HMDA reported property value and SDAT sale price
+## Specification Framework
 
-The linkage then requires uniqueness in both directions: an HMDA record must correspond to exactly one SDAT candidate, and that SDAT record must correspond to exactly one HMDA candidate.
+The analysis estimates a sequence of nested specifications.
 
-This procedure produces **4,789 bidirectionally unique exact tract/value links**, with no duplicate HMDA or SDAT identifiers in the linked sample.
+**Model A — HMDA controls**
 
-Because HMDA reported property value and SDAT sale price are not conceptually identical measures in every transaction, these records are treated as **high-confidence links rather than definitively identified property matches**.
+Controls for borrower income, debt-to-income category, loan term, occupancy, construction method, number of units, and county.
 
-After requiring complete information for the linked regression specifications, the final same-sample property-control analysis contains **4,167 observations**.
+**Model B — Property characteristics**
 
-## Primary Analysis
+Adds independently measured property characteristics, including square footage, property age, grade, and dwelling type.
 
-The dependent variable is the natural logarithm of reported property value.
+**Model C — Mortgage-product characteristics**
 
-The preferred full-HMDA specification includes:
+Adds loan type and conforming-loan status.
 
-- Mortgage interest rate
-- Log applicant income
-- Debt-to-income ratio as a categorical variable
-- Loan term
-- Occupancy type
-- Construction method
-- Total units
-- County fixed effects
+**Model D — Lender heterogeneity**
 
-Loan amount and loan-to-value ratio are **not included** in the preferred property-value specification.
+Adds lender fixed effects.
 
-The model is estimated using ordinary least squares (OLS), with **HC3 heteroskedasticity-robust standard errors**.
+**Model E — Local-market characteristics**
 
-The primary model uses **58,587 observations**.
+Adds tract-to-MSA income percentage and median age of the housing stock.
 
-The estimated interest-rate coefficient is **-0.0369**. This corresponds to an exact semi-log association of approximately **-3.62%** for a one-percentage-point higher observed mortgage interest rate, conditional on the included covariates.
+**Model F — Census tract fixed effects**
 
-The adjusted R-squared is **0.637**.
+Uses Census tract fixed effects as a high-dimensional geographic specification while retaining property, mortgage-product, and lender controls.
 
-## Linked Property-Control Analysis
+## Main Results
 
-The linked-sample analysis estimates two models on the same **4,167 observations**.
+The estimated coefficient on mortgage interest rates changes materially across specifications:
 
-The first uses the HMDA controls from the primary specification. The estimated interest-rate coefficient is **-0.0809**, corresponding to approximately **-7.77%**, with an adjusted R-squared of **0.703**.
+| Model | Rate coefficient | Approx. % association |
+|------|-----------------:|----------------------:|
+| A | -0.0809 | -7.77% |
+| B | -0.0405 | -3.97% |
+| C | -0.0483 | -4.72% |
+| D | -0.0471 | -4.61% |
+| E | -0.0427 | -4.18% |
+| F | -0.0356 | -3.50% |
 
-The second adds the following SDAT property characteristics:
+The largest change occurs when independently measured property characteristics are introduced between Models A and B.
 
-- Log square footage
-- Property age
-- Property grade
-- Dwelling type
+The coefficient does not decline monotonically across every specification. In particular, adding mortgage-product controls in Model C increases the magnitude relative to Model B. Subsequent lender and geographic specifications produce further changes in the estimated association.
 
-After adding these property controls, the estimated interest-rate coefficient is **-0.0405**, corresponding to approximately **-3.97%**, and the adjusted R-squared increases to **0.856**.
+Across all specifications, the mortgage-rate coefficient remains negative, but its magnitude is sensitive to the information included in the model.
 
-The reduction in the magnitude of the interest-rate coefficient after adding observed property characteristics indicates that property characteristics account for a meaningful portion of the simpler linked-sample association.
+## Linkage-Selection Sensitivity Analysis
 
-The linked sample is used as a robustness analysis rather than as the primary sample because the linkage procedure selects a subset of HMDA observations and the linked records tend to represent larger and higher-value properties.
+Because only a subset of HMDA observations can be linked with high confidence to SDAT property records, the study also evaluates observable linkage selection.
 
-## Code
+A logistic model estimates the probability that an HMDA observation is successfully linked using observable borrower, mortgage, property-value, and Census-tract characteristics.
 
-The final analysis script is:
+Stabilized inverse-probability weights are then applied to Model E as a sensitivity analysis.
 
-`Paper1_Final_Analysis.R`
+The linkage-weighted Model E produces an interest-rate coefficient of approximately **-0.0374**, corresponding to an estimated **3.67% lower property value per one-percentage-point higher mortgage rate**, conditional on the included covariates.
 
-The script performs:
+The unweighted Model E coefficient is approximately **-0.0427**.
 
-- HMDA sample construction
-- HMDA-SDAT exact tract/value linkage
-- Bidirectional uniqueness checks
-- Linked-sample selection diagnostics
-- Structural property comparisons
-- Primary HMDA regression
-- Same-sample linked regressions
-- HC3 robust inference
-- Final result and coefficient exports
-- Reproducibility checks
+This weighting exercise is interpreted only as a sensitivity analysis for observable linkage selection. It does not establish representativeness or correct for selection on unobserved characteristics.
 
-## Required R Packages
+## Statistical Inference
 
-The final analysis uses:
+Heteroskedasticity-consistent HC3 standard errors are used for Models A–C.
+
+Models D and E use lender-clustered standard errors.
+
+Model F uses Census-tract-clustered standard errors.
+
+The linkage-weighted Model E uses lender-clustered standard errors.
+
+## Repository Files
+
+### `Paper1_QREF_Version2_Analysis.R`
+
+Main R analysis and reproduction script used for the Version 2 study. The script contains the data preparation, record linkage, regression specifications, lender and geographic analyses, and linkage-selection sensitivity analysis.
+
+Additional CSV and figure files in the repository contain supporting model outputs and visualizations generated during the analysis.
+
+## Software
+
+The analysis was conducted in R.
+
+Principal R packages used include:
 
 - `readr`
 - `dplyr`
@@ -129,37 +141,27 @@ The final analysis uses:
 
 ## Reproducibility
 
-To reproduce the final analysis:
+The analysis script requires the original HMDA and cleaned Maryland SDAT input files.
 
-1. Obtain the 2025 Maryland HMDA loan-level data.
-2. Prepare the Maryland SDAT residential transaction data with Census tract assignments using the preprocessing procedures described in the research project.
-3. Place the following two files in the R working directory:
+Because the raw source datasets are not redistributed in this repository, users must obtain the underlying data separately and place the required input files in the R working directory before running the analysis.
 
-   `loan_purposes_1_state_MD.csv`
+Required input filenames:
 
-   `SDAT_2025_Market_Sales_With_Census_Tracts.csv`
+- `loan_purposes_1_state_MD.csv`
+- `SDAT_2025_Market_Sales_With_Census_Tracts.csv`
 
-4. Place `Paper1_Final_Analysis.R` in the same working directory.
-5. Install the required R packages if necessary.
-6. Run the complete R script.
+## Interpretation
 
-The final script was verified to reproduce the principal sample counts, linkage counts, model estimates, and output files reported in the revised analysis.
+The results should not be interpreted as identifying the causal effect of mortgage interest rates on property values.
 
-## Main Output Files
+Instead, the analysis demonstrates that the estimated mortgage rate–property value relationship is sensitive to observed property characteristics, mortgage-product characteristics, lender heterogeneity, and geographic controls.
 
-The script produces the following principal result files:
-
-- `Paper1_Final_Core_Model_Comparison.csv`
-- `Paper1_Final_Core_Model_Comparison_With_Percent_Effects.csv`
-- `Paper1_Final_Primary_HC3_Coefficients.csv`
-- `Paper1_Final_Linked_Base_HC3_Coefficients.csv`
-- `Paper1_Final_Linked_Property_HC3_Coefficients.csv`
-- `HMDA_SDAT_Final_Same_Sample_Nested_Models.csv`
+This specification sensitivity is the central empirical focus of the study.
 
 ## License
 
-The code in this repository is released under the MIT License.
+This repository is distributed under the MIT License.
 
 ## Citation
 
-Sarpong, P. (2026). *Mortgage Interest Rates and Residential Property Values: Evidence from Linked Maryland HMDA and SDAT Data*.
+A permanent citation and DOI will be added after the Version 2 repository is archived through Zenodo.
