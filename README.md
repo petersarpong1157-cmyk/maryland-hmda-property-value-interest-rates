@@ -121,7 +121,7 @@ The linkage-weighted Model E uses lender-clustered standard errors.
 
 ## Repository Files
 
-### `Paper1_QREF_Version2_Analysis.R`
+### `Paper1_QREF_Version2_Reproduction.R`
 
 Main R analysis and reproduction script used for the Version 2 study. The script contains the data preparation, record linkage, regression specifications, lender and geographic analyses, and linkage-selection sensitivity analysis.
 
